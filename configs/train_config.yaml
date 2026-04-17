@@ -1,0 +1,31 @@
+model:
+  name: "openai/whisper-large-v3"
+  language: "uzbek"
+  task: "transcribe"
+
+data:
+  dataset_name: "mozilla-foundation/common_voice_13_0"
+  language_code: "uz"
+  max_input_length: 30.0
+  min_input_length: 0.5
+
+training:
+  output_dir: "./outputs/checkpoints"
+  per_device_train_batch_size: 16
+  gradient_accumulation_steps: 2
+  learning_rate: 1.0e-5
+  warmup_steps: 500
+  max_steps: 6000
+  save_steps: 500
+  eval_steps: 500
+  fp16: false
+  bf16: true
+  gradient_checkpointing: true
+  seed: 42
+
+lora:
+  use_lora: true
+  r: 32
+  lora_alpha: 64
+  target_modules: ["q_proj", "v_proj", "k_proj", "out_proj"]
+  dropout: 0.05
