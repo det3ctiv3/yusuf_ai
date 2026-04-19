@@ -7,8 +7,8 @@ from transformers import WhisperProcessor
 
 MIN_DURATION = 0.5
 MAX_DURATION = 30.0
-MAX_TOKEN = 448
-MAX_CHARS = 2
+MAX_TOKENS = 448
+MIN_CHARS = 2
 
 
 def normalize_uzbek_text(text: str) -> str:
@@ -56,16 +56,20 @@ def get_processor(cfg) -> WhisperProcessor:
 def make_prepare_fn(processor: WhisperProcessor):
     def prepare_dataset(batch: dict) -> dict:
         audios = [s["array"] for s in batch["audio"]]
+
         inputs = processor.feature_extractor(
             audios,
             sampling_rate=16_000,
             return_tensors="np",
         )
+        batch["input_features"] = inputs.input_features
+
         labels = processor.tokenizer(
             batch["sentence"],
             max_length=MAX_TOKENS,
             truncation=True,
         )
+        batch["labels"] = labels.input_ids
 
         batch["input_length"] = [len(a) / 16_000 for a in audios]
         return batch
@@ -76,7 +80,6 @@ def make_prepare_fn(processor: WhisperProcessor):
 def extract_features(
     cleaned: DatasetDict, processor: WhisperProcessor, cfg
 ) -> DatasetDict:
-
     cache = cfg.data.processed_cache
     from pathlib import Path
 

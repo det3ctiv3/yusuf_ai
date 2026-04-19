@@ -1,10 +1,7 @@
-/data/preprocessed/
-/data/processed/
-/.agent/
-/.agents/
-/.claude/
-/.venv/
-__pycache__/
-*.py[cod]
-.ipynb_checkpoints/
+/data/processed
+.env
+.agent
+.agents
+.claude
+.venv
 skills-lock.json
