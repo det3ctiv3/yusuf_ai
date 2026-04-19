@@ -73,4 +73,4 @@ def merge_and_save_lora(checkpoint_path: str, output_path: str, cfg):
     peft_model = PeftModel.from_pretrained(base, checkpoint_path)
     merged = peft_model.merge_and_unload()
     merged.save_pretrained(output_path, safe_serialization=True)
-    print(f"Merged model saveed to {output_path}")
+    print(f"Merged model saveed to  {output_path}")
